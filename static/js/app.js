@@ -47,10 +47,8 @@
   }
 
   function initState(data){
-    const playersABatting = data.playersA.map(name=>({name,runs:0,balls:0,strikerate:0,average:0}));
-    const playersBBowling = data.playersB.map(name=>({name,runs:0,overs:0,wickets:0}));
-    const playersBBatting = data.playersB.map(name=>({name,runs:0,balls:0,strikerate:0,average:0}));
-    const playersABowling = data.playersB.map(name=>({name,runs:0,overs:0,wickets:0}));
+    const playersA = data.playersA.map(name=>({name,runs:0,balls:0,wickets:0,ballsBowled:0,overs:0,conceded:0}));
+    const playersB = data.playersB.map(name=>({name,runs:0,balls:0,wickets:0,ballsBowled:0,overs:0,conceded:0}));
     state = {
       teamA:{name:data.teamA,players:playersA,score:0,wickets:0,overs:0,balls:0,completed:false},
       teamB:{name:data.teamB,players:playersB,score:0,wickets:0,overs:0,balls:0,completed:false},
@@ -58,7 +56,7 @@
       innings:1, // 1 => team batting is based on toss decision
       battingSide: data.tossDecision==='bat' ? (data.tossWinner==='A'?'A':'B') : (data.tossWinner==='A'?'B':'A'),
       onStrikeIndex:0, nonStrikeIndex:1, bowlerIndex:2,
-      currentOver:[], // array of ball objects
+      currentOver: Array(6).fill(null), // array of ball objects
       history:[],
       freeHit:false
     };
