@@ -96,8 +96,9 @@
   nonStrikeSel.addEventListener('change', syncStrikeSelectors);
   
   function renderOverTracker(){
-  overTracker.innerHTML = '';
-  state.currentOver.forEach((_, i) => {
+    if(!state || !state.currentOver) return;
+    overTracker.innerHTML = '';
+    state.currentOver.forEach((_, i) => {
     const div = document.createElement('div');
     div.className = 'ball';
     div.dataset.idx = i;
@@ -145,7 +146,16 @@
       if(state.config.countExtras) batting.score += 1; bowler.conceded +=1; ballObj.display='NB';
       if(state.config.freeHit) state.freeHit = true;
     } else if(type==='wicket'){
-      batting.wickets +=1; batting.balls +=1; striker.balls +=1; bowler.wickets = (bowler.wickets||0)+1; bowler.ballsBowled +=1; ballObj.display='W';
+      batting.wickets +=1; 
+      if(batting.wickets===batting.players.length){
+        endInnings();
+      }
+      batting.balls +=1; 
+      striker.balls +=1; 
+      bowler.wickets = (bowler.wickets||0)+1; 
+      bowler.ballsBowled +=1; 
+      ballObj.display='W'; 
+      batting.wicketsRemaining-=1;
     }
 
     // place in currentOver (legal deliveries only increment ball slot)
