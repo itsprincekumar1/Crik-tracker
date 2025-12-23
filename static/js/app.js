@@ -98,11 +98,11 @@
   function renderOverTracker(){
     if(!state || !state.currentOver) return;
     overTracker.innerHTML = '';
-    state.currentOver.forEach((_, i) => {
+    state.currentOver.forEach((ball, i) => {
     const div = document.createElement('div');
     div.className = 'ball';
     div.dataset.idx = i;
-    div.textContent = '-';
+    div.textContent = ball?ball.display:'-';
     overTracker.appendChild(div);
   });
 }
@@ -117,13 +117,23 @@
   }
 
   function updateOverTrackerUI(){
+    if(!state || !Array.isArray(state.currentOver)) return;
     const slots = qs('.ball');
     // if state or currentOver isn't ready, clear UI
-    if(!state || !Array.isArray(state.currentOver)){
-      slots.forEach(s=>{ s.textContent='-'; s.classList.remove('done'); });
-      return;
+    if(slots.length !== state.currentOver.length){
+    renderOverTracker();
+  }
+
+  qs('.ball').forEach((s, i)=>{
+    const ball = state.currentOver[i];
+    if(ball){
+      s.textContent = ball.display;
+      s.classList.add('done');
+    } else {
+      s.textContent='-';
+      s.classList.remove('done');
     }
-    slots.forEach(s=>{ const i=+s.dataset.idx; const ball = state.currentOver[i]; if(ball){ s.textContent = ball.display; s.classList.add('done') } else { s.textContent='-'; s.classList.remove('done') } });
+  });
   }
 
   function recordBall({type='run',runs=0}){
@@ -164,11 +174,15 @@
       let idx = state.currentOver.findIndex(b=>b==null);
       if(idx===-1){ idx = state.currentOver.length; }
       state.currentOver[idx] = ballObj;
-    } else {
-      // extras don't occupy a legal slot
-      // show as last extras slot briefly
-      const idx = state.currentOver.findIndex(b=>b==null);
-      if(idx===-1){ state.currentOver.push(ballObj); } else { state.currentOver[idx] = ballObj; }
+    } 
+    else {
+      // extras should appear before legal empty slots
+      const firstEmptyIdx = state.currentOver.findIndex(b => b === null);
+      if (firstEmptyIdx === -1) {
+        state.currentOver.push(ballObj);
+      } else {
+        state.currentOver.splice(firstEmptyIdx, 0, ballObj);
+      }
     }
 
     state.history.push(ballObj);
