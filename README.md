@@ -1,14 +1,24 @@
-# Crik-Track
+# Live Match Scoring Backend (TypeScript + Express + Socket.IO)
 
-Mobile-first cricket scoring web app (HTML/CSS/JS) with a minimal Python server to serve files and save matches locally.
+## Prerequisites
+- Node.js 18+
+- MongoDB (local or cloud)
 
-Quick start (Windows / PowerShell):
+## Build
+- `npm run build`
+- Outputs compiled code to `dist/`
 
-```powershell
-python server.py
-# Open http://localhost:8000/ in your phone or emulator
-```
+## Start (production build)
+- `npm run start`
+- Requires a built `dist/`
 
-Notes:
-- The app is offline-first in the browser and stores the current match state in memory; you can save the match with the "Save Match" button — this will POST to `/save` and create a JSON file under the `matches/` folder.
-- No account or network login required.
+## Formatting and Pre-Commit
+- Format all source files: `npm run format`
+- Pre-commit hook automatically formats staged files and runs `npm run build`
+
+## API Base
+- All REST endpoints are under `API_PREFIX` (default `/api/v1`)
+
+## API Docs
+- Swagger: `http://localhost:5050/api-docs`
+- Shows Auth, Match, and Socket Test endpoints with detailed summaries and examples
