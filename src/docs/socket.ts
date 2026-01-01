@@ -4,6 +4,7 @@ const SocketDoc = {
     summary: 'Emit Socket.IO event to a match room (Umpire only)',
     description:
       'Testing endpoint to emit Socket.IO events to a match room. Useful with Swagger to simulate real-time updates. For `score_updated`, server will also persist provided score fields before emission. For `new_comment`, server will append a comment and broadcast it.',
+    security: [{ userAuth: [] }],
     requestBody: {
       required: true,
       content: {

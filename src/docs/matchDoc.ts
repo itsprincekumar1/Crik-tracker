@@ -4,15 +4,7 @@ const MatchDoc = {
     summary: 'Create a new match (Umpire only)',
     description:
       'Creates a match with Team A and Team B. The authenticated user becomes the Umpire. Returns unique `matchId` and a shareable join link.',
-    parameters: [
-      {
-        name: 'Authorization',
-        in: 'header',
-        required: true,
-        description: 'Bearer token of authenticated umpire user',
-        schema: { type: 'string', example: 'Bearer <jwt>' },
-      },
-    ],
+    security: [{ userAuth: [] }],
     requestBody: {
       required: true,
       content: {
@@ -81,16 +73,8 @@ const MatchDoc = {
     summary: 'Get match details (Viewer or Umpire token required)',
     description:
       'Returns current match state including teams, score, status, and rules. Requires either a valid viewer token for the match or a valid umpire JWT.',
-    parameters: [
-      { name: 'matchId', in: 'path', required: true, schema: { type: 'string' } },
-      {
-        name: 'Authorization',
-        in: 'header',
-        required: true,
-        description: 'Bearer viewer token for this match or umpire JWT',
-        schema: { type: 'string', example: 'Bearer <jwt>' },
-      },
-    ],
+    security: [{ matchAuth: [] }],
+    parameters: [{ name: 'matchId', in: 'path', required: true, schema: { type: 'string' } }],
     responses: {
       200: {
         description: 'Success',
@@ -173,16 +157,8 @@ const MatchDoc = {
     summary: 'End match (Umpire only)',
     description:
       'Ends the match, deletes its data, disconnects all sockets in the room, and invalidates the join link.',
-    parameters: [
-      { name: 'matchId', in: 'path', required: true, schema: { type: 'string' } },
-      {
-        name: 'Authorization',
-        in: 'header',
-        required: true,
-        description: 'Bearer token of authenticated umpire user',
-        schema: { type: 'string', example: 'Bearer <jwt>' },
-      },
-    ],
+    security: [{ userAuth: [] }],
+    parameters: [{ name: 'matchId', in: 'path', required: true, schema: { type: 'string' } }],
     responses: {
       200: { description: 'Match ended' },
       401: { description: 'Unauthorized' },
@@ -195,16 +171,8 @@ const MatchDoc = {
     summary: 'Leave match (viewer)',
     description:
       'Removes the viewer username reservation from the match. Requires a valid viewer token for this match.',
-    parameters: [
-      { name: 'matchId', in: 'path', required: true, schema: { type: 'string' } },
-      {
-        name: 'Authorization',
-        in: 'header',
-        required: true,
-        description: 'Bearer viewer token for this match',
-        schema: { type: 'string', example: 'Bearer <viewer-jwt>' },
-      },
-    ],
+    security: [{ matchAuth: [] }],
+    parameters: [{ name: 'matchId', in: 'path', required: true, schema: { type: 'string' } }],
     responses: {
       200: { description: 'Left match' },
       401: { description: 'Unauthorized' },
