@@ -3,8 +3,8 @@ services:
     name: criket-tracker-be
     env: node
     plan: free
-    buildCommand: npm install && npm run build
-    startCommand: npm start
+    buildCommand: npm install --include=dev && npm run build
+    startCommand: pwd && ls -R && npm start
     envVars:
       - key: NODE_ENV
         value: production
